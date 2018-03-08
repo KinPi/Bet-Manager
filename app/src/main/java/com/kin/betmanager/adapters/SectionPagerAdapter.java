@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import com.kin.betmanager.BetsListFragment;
+import com.kin.betmanager.ContactsFragment;
 import com.kin.betmanager.R;
 
 /**
@@ -25,20 +25,19 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem (int position) {
-        Fragment fragment = new BetsListFragment();
-        Bundle bundle = new Bundle();
+        Fragment fragment = null;
         switch (position) {
             case 0:
-                bundle.putInt(BetsListFragment.IS_ON_GOING, 1);
-                break;
             case 1:
-                bundle.putInt(BetsListFragment.IS_ON_GOING, 0);
+                fragment = new BetsListFragment();
+                Bundle bundle = new Bundle();
+                fragment.setArguments(bundle);
+                bundle.putInt(BetsListFragment.IS_COMPLETED, position);
                 break;
             case 2:
-                bundle.putInt(BetsListFragment.IS_ON_GOING, 2);
+                fragment = new ContactsFragment();
                 break;
         }
-        fragment.setArguments(bundle);
         return fragment;
 
     }

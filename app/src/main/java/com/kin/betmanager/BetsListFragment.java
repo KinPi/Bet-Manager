@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import com.kin.betmanager.database.DatabaseHelper;
  */
 public class BetsListFragment extends ListFragment {
 
-    public static final String IS_ON_GOING = "isOnGoing";
+    public static final String IS_COMPLETED = "isOnGoing";
 
     SQLiteDatabase db = null;
     Cursor cursor = null;
@@ -38,14 +37,14 @@ public class BetsListFragment extends ListFragment {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_bets_list, container, false);
 
-        isOnGoing = getArguments().getInt(IS_ON_GOING);
+        isOnGoing = getArguments().getInt(IS_COMPLETED);
 
         try {
             DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getActivity().getApplicationContext());
             db = databaseHelper.getReadableDatabase();
-            cursor = db.query(DatabaseHelper.TABLE_NAME,
-                    new String [] {DatabaseHelper.ID, DatabaseHelper.TITLE},
-                    DatabaseHelper.ONGOING + " = ?",
+            cursor = db.query(DatabaseHelper.BETS_TABLE,
+                    new String [] {DatabaseHelper.BET_ID, DatabaseHelper.TITLE},
+                    DatabaseHelper.COMPLETED + " = ?",
                     new String[] {Integer.toString(isOnGoing)}, null, null, null );
             SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
                     android.R.layout.simple_list_item_1,
