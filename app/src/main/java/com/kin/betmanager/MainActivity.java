@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +20,11 @@ import com.kin.betmanager.database.DatabaseHelper;
 public class MainActivity extends AppCompatActivity {
 
     private static final int NEW_BET_REQUEST_CODE = 0;
+    private static final String VIEW_PAGER_POSITION = "view pager position";
     private MenuItem createNewBetMenuItem;
     private FloatingActionButton createNewBetFAB;
+
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +35,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         SectionPagerAdapter pagerAdapter = new SectionPagerAdapter(this, getSupportFragmentManager());
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(pagerAdapter);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(pager);
+        tabLayout.setupWithViewPager(viewPager);
 
         createNewBetFAB = (FloatingActionButton) findViewById(R.id.fab_create_new_bet);
+
+        if (savedInstanceState != null) {
+            int viewPagerPosition = savedInstanceState.getInt(VIEW_PAGER_POSITION);
+            viewPager.setCurrentItem(viewPagerPosition);
+        }
     }
 
     @Override
@@ -47,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
             createNewBetMenuItem.setEnabled(true);
         }
         createNewBetFAB.setEnabled(true);
+    }
+
+    @Override
+    protected void onSaveInstanceState (Bundle savedInstanceState) {
+        savedInstanceState.putInt(VIEW_PAGER_POSITION, viewPager.getCurrentItem());
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -70,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
     public void onClickFloatingActionButton(View view) {
         createNewBetFAB.setEnabled(false);

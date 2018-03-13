@@ -75,6 +75,10 @@ public class NewBetActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected (MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
             case R.id.action_done :
                 String inputTitle = titleEditText.getText().toString();
                 String inputBettingAgainst = bettingAgainstEditText.getText().toString();
