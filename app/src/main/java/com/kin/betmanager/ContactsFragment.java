@@ -1,6 +1,7 @@
 package com.kin.betmanager;
 
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -73,7 +74,14 @@ public class ContactsFragment extends Fragment {
 
         ContactsAdapter adapter = new ContactsAdapter(contactNames);
         recyclerView.setAdapter(adapter);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        int numContactsPerRow = 0;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            numContactsPerRow = 2;
+        }
+        else {
+            numContactsPerRow = 4;
+        }
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), numContactsPerRow);
         recyclerView.setLayoutManager(layoutManager);
 
         return recyclerView;

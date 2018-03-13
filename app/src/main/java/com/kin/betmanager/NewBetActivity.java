@@ -1,14 +1,25 @@
 package com.kin.betmanager;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kin.betmanager.database.DatabaseHelper;
+
 public class NewBetActivity extends AppCompatActivity {
+
+    public static final String NEW_BET_ID = "new bet id";
+
     private static final String TITLE = "title";
     private static final String BETTING_AGAINST = "betting against";
     private static final String OPPONENTS_BET = "opponenet's bet";
@@ -65,18 +76,42 @@ public class NewBetActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected (MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.action_done :
-                if (titleEditText.getText().toString().isEmpty()) {
+                String inputTitle = titleEditText.getText().toString();
+                String inputBettingAgainst = bettingAgainstEditText.getText().toString();
+                String inputOpponentsBet = opponentsBetEditText.getText().toString();
+                String inputYourBet = yourBetEditText.getText().toString();
+                String inputTermsAndConditions = termsAndConditionsEditText.getText().toString();
+
+                if (inputTitle.isEmpty()) {
                     Toast.makeText(this, "Title cannot be empty!", Toast.LENGTH_SHORT).show();
-                } else if (bettingAgainstEditText.getText().toString().isEmpty()) {
+                } else if (inputBettingAgainst.isEmpty()) {
                     Toast.makeText(this, "Betting against cannot be empty!", Toast.LENGTH_SHORT).show();
-                } else if (opponentsBetEditText.getText().toString().isEmpty()) {
+                } else if (inputOpponentsBet.isEmpty()) {
                     Toast.makeText(this, "Opponent's bet against cannot be empty!", Toast.LENGTH_SHORT).show();
-                } else if (yourBetEditText.getText().toString().isEmpty()) {
+                } else if (inputYourBet.isEmpty()) {
                     Toast.makeText(this, "Your bet cannot be empty!", Toast.LENGTH_SHORT).show();
-                } else if (termsAndConditionsEditText.getText().toString().isEmpty()) {
+                } else if (inputTermsAndConditions.isEmpty()) {
                     Toast.makeText(this, "Terms and conditions cannot be empty!", Toast.LENGTH_SHORT).show();
                 }
-                return true;
+                else {
+                    long newBetId = DatabaseHelper.insertNewBet(
+                            this,
+                            inputTitle,
+                            inputBettingAgainst,
+                            inputOpponentsBet,
+                            inputYourBet,
+                            inputTermsAndConditions,
+                            false);
+                    if (newBetId != -1) {
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra(NEW_BET_ID, newBetId);
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
+                    }
+                    else {
+                        Log.e(NewBetActivity.class.getSimpleName(), "Failed to add new bet!");
+                    }
+                }
         }
         return super.onOptionsItemSelected(menuItem);
     }

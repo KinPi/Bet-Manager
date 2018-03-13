@@ -15,4 +15,6 @@
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="done">Done</string>
     <string name="profile_picture">Profile Picture</string>
+    <string name="bet_created_message">Your bet has been created!</string>
+    <string name="undo">Undo</string>
 </resources>
