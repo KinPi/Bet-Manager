@@ -103,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         long betId = data.getLongExtra(NewBetActivity.NEW_BET_ID, -1);
                         DatabaseHelper.deleteBet(MainActivity.this, betId);
+                        ContactsFragment fragment = (ContactsFragment) ((SectionPagerAdapter)viewPager.getAdapter()).fragmentReferenceMap.get(2);
+                        fragment.updateData();
+
                     }
 
                 });

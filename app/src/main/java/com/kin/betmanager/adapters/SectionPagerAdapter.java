@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.View;
 
 import com.kin.betmanager.BetsListFragment;
 import com.kin.betmanager.ContactsFragment;
 import com.kin.betmanager.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kin on 3/3/18.
@@ -17,10 +21,12 @@ import com.kin.betmanager.R;
 public class SectionPagerAdapter extends FragmentPagerAdapter {
 
     private Context context = null;
+    public Map<Integer, Fragment> fragmentReferenceMap;
 
     public SectionPagerAdapter (Context context, FragmentManager fragmentManager) {
         super(fragmentManager);
         this.context = context;
+        fragmentReferenceMap = new HashMap<>(3);
     }
 
     @Override
@@ -38,6 +44,7 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
                 fragment = new ContactsFragment();
                 break;
         }
+        fragmentReferenceMap.put(position, fragment);
         return fragment;
 
     }
@@ -58,5 +65,11 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount () {
         return 3;
+    }
+
+    @Override
+    public void destroyItem (View container, int position, Object object) {
+        super.destroyItem(container, position, object);
+        fragmentReferenceMap.remove(position);
     }
 }

@@ -25,8 +25,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class ContactsFragment extends Fragment {
-    SQLiteDatabase db;
-    List<String> contactNames;
+    RecyclerView recyclerView;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -37,9 +36,42 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.v("Testing to see", "Hello World!");
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_contacts, container, false);
+        recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_contacts, container, false);
+        int numContactsPerRow;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            numContactsPerRow = 2;
+        }
+        else {
+            numContactsPerRow = 4;
+        }
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), numContactsPerRow);
+        recyclerView.setLayoutManager(layoutManager);
+
+        return recyclerView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateData();
+    }
+
+    public void updateData () {
+        ContactsAdapter adapter = (ContactsAdapter) recyclerView.getAdapter();
+        if (adapter == null) {
+            adapter = new ContactsAdapter(fetchAllContacts());
+            recyclerView.setAdapter(adapter);
+        }
+        else {
+            adapter.setContactNames(fetchAllContacts());
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private List<String> fetchAllContacts () {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getActivity());
+        SQLiteDatabase db = null;
+        List<String> contactNames = null;
         try {
             db = databaseHelper.getReadableDatabase();
             Cursor cursor = db.query(DatabaseHelper.CONTACTS_TABLE,
@@ -47,14 +79,11 @@ public class ContactsFragment extends Fragment {
                     null, null, null, null, null);
 
             contactNames = new ArrayList<>();
-            Log.d("Cursor move to first", cursor.moveToFirst() + "");
             if (cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(0);
                     String name = cursor.getString(1);
                     int image = cursor.getInt(2);
-
-                    Log.d("Cursor", id + " " + name + " " + image);
                     contactNames.add(name);
                 } while (cursor.moveToNext());
             }
@@ -71,20 +100,7 @@ public class ContactsFragment extends Fragment {
                 db.close();
             }
         }
-
-        ContactsAdapter adapter = new ContactsAdapter(contactNames);
-        recyclerView.setAdapter(adapter);
-        int numContactsPerRow = 0;
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            numContactsPerRow = 2;
-        }
-        else {
-            numContactsPerRow = 4;
-        }
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), numContactsPerRow);
-        recyclerView.setLayoutManager(layoutManager);
-
-        return recyclerView;
+        return contactNames;
     }
 
 }

@@ -21,6 +21,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         this.contactNames = contactNames;
     }
 
+    public void setContactNames (List<String> contactNames) {
+        this.contactNames = contactNames;
+    }
+
     @Override
     public int getItemCount () {
         return contactNames.size();

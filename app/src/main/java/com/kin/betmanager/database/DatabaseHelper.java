@@ -70,25 +70,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 CONTACTS_TABLE, CONTACT_ID, CONTACT_NAME, CONTACT_IMAGE);
         db.execSQL(createContactsTableSqlString);
 
-        insertNewContact(db, "Chris Manlapid", R.drawable.default_user);
-        insertNewContact(db, "Dummy User", R.drawable.default_user);
-        insertNewContact(db, "Dummy User 2", R.drawable.default_user);
-
-        insertNewBet(db,
-                "SAT Scores",
-                1,
-                "$10",
-                "$5",
-                "I win if I get over 1800 in the SAT.",
-                false);
-
-        insertNewBet(db,
-                "GRE Scores",
-                1,
-                "$10",
-                "$5",
-                "I win if I get over 1800 in the SAT.",
-                true);
+//        insertNewContact(db, "Chris Manlapid", R.drawable.default_user);
+//        insertNewContact(db, "Dummy User", R.drawable.default_user);
+//        insertNewContact(db, "Dummy User 2", R.drawable.default_user);
+//
+//        insertNewBet(db,
+//                "SAT Scores",
+//                1,
+//                "$10",
+//                "$5",
+//                "I win if I get over 1800 in the SAT.",
+//                false);
+//
+//        insertNewBet(db,
+//                "GRE Scores",
+//                1,
+//                "$10",
+//                "$5",
+//                "I win if I get over 1800 in the SAT.",
+//                true);
     }
 
     @Override
