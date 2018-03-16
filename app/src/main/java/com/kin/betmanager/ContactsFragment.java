@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.kin.betmanager.adapters.ContactsAdapter;
 import com.kin.betmanager.database.DatabaseHelper;
+import com.kin.betmanager.objects.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends UpdatableFragment {
     RecyclerView recyclerView;
 
     public ContactsFragment() {
@@ -36,7 +38,7 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_contacts, container, false);
+        recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_viewpager, container, false);
         int numContactsPerRow;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             numContactsPerRow = 2;
@@ -47,6 +49,12 @@ public class ContactsFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), numContactsPerRow);
         recyclerView.setLayoutManager(layoutManager);
 
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                recyclerView.getContext(),
+                DividerItemDecoration.HORIZONTAL
+        );
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
         return recyclerView;
     }
 
@@ -56,35 +64,36 @@ public class ContactsFragment extends Fragment {
         updateData();
     }
 
+    @Override
     public void updateData () {
         ContactsAdapter adapter = (ContactsAdapter) recyclerView.getAdapter();
         if (adapter == null) {
-            adapter = new ContactsAdapter(fetchAllContacts());
+            adapter = new ContactsAdapter(getActivity(), fetchAllContacts());
             recyclerView.setAdapter(adapter);
         }
         else {
-            adapter.setContactNames(fetchAllContacts());
+            adapter.setContacts(fetchAllContacts());
             adapter.notifyDataSetChanged();
         }
     }
 
-    private List<String> fetchAllContacts () {
+    private List<Contact> fetchAllContacts () {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getActivity());
         SQLiteDatabase db = null;
-        List<String> contactNames = null;
+        List<Contact> contacts = null;
         try {
             db = databaseHelper.getReadableDatabase();
             Cursor cursor = db.query(DatabaseHelper.CONTACTS_TABLE,
                     new String [] {DatabaseHelper.CONTACT_ID, DatabaseHelper.CONTACT_NAME, DatabaseHelper.CONTACT_IMAGE},
                     null, null, null, null, null);
 
-            contactNames = new ArrayList<>();
+            contacts = new ArrayList<>();
             if (cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(0);
                     String name = cursor.getString(1);
                     int image = cursor.getInt(2);
-                    contactNames.add(name);
+                    contacts.add(new Contact(id, name, image));
                 } while (cursor.moveToNext());
             }
 
@@ -100,7 +109,7 @@ public class ContactsFragment extends Fragment {
                 db.close();
             }
         }
-        return contactNames;
+        return contacts;
     }
 
 }

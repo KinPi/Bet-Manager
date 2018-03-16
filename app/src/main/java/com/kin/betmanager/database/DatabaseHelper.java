@@ -3,13 +3,13 @@ package com.kin.betmanager.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.view.View;
 
 import com.kin.betmanager.R;
+import com.kin.betmanager.objects.Bet;
+import com.kin.betmanager.objects.Contact;
 
 /**
  * Created by Kin on 3/6/18.
@@ -70,25 +70,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 CONTACTS_TABLE, CONTACT_ID, CONTACT_NAME, CONTACT_IMAGE);
         db.execSQL(createContactsTableSqlString);
 
-//        insertNewContact(db, "Chris Manlapid", R.drawable.default_user);
-//        insertNewContact(db, "Dummy User", R.drawable.default_user);
-//        insertNewContact(db, "Dummy User 2", R.drawable.default_user);
-//
-//        insertNewBet(db,
-//                "SAT Scores",
-//                1,
-//                "$10",
-//                "$5",
-//                "I win if I get over 1800 in the SAT.",
-//                false);
-//
-//        insertNewBet(db,
-//                "GRE Scores",
-//                1,
-//                "$10",
-//                "$5",
-//                "I win if I get over 1800 in the SAT.",
-//                true);
     }
 
     @Override
@@ -96,16 +77,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    private static long insertNewContact(SQLiteDatabase db,
-                                  String newContactName,
-                                  int newContactImage) {
+    private static Contact insertNewContact(SQLiteDatabase db,
+                                            String newContactName,
+                                            int newContactImage) {
         ContentValues values = new ContentValues();
         values.put(CONTACT_NAME, newContactName);
         values.put(CONTACT_IMAGE, newContactImage);
-        return db.insert(CONTACTS_TABLE, null, values);
+        long id = db.insert(CONTACTS_TABLE, null, values);
+        if (id != -1) {
+            return new Contact(id, newContactName, newContactImage);
+        }
+        return null;
     }
 
-    private static long insertNewBet (SQLiteDatabase db,
+    private static Bet insertNewBet (SQLiteDatabase db,
                                      String newTitle,
                                      long newBettingAgainst,
                                      String newOpponentsBet,
@@ -119,7 +104,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(YOUR_BET, newYourBet);
         values.put(TERMS_AND_CONDITIONS, newTermsAndConditions);
         values.put(COMPLETED, newCompleted);
-        return db.insert(BETS_TABLE, null, values);
+        long id = db.insert(BETS_TABLE, null, values);
+        if (id != -1) {
+            return new Bet(id, newTitle, newBettingAgainst, newOpponentsBet, newYourBet, newTermsAndConditions, newCompleted);
+        }
+        return null;
     }
 
     /**
@@ -160,7 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
             else {
-                contactId = DatabaseHelper.insertNewContact(db, newBettingAgainst, R.drawable.default_user);
+                contactId = DatabaseHelper.insertNewContact(db, newBettingAgainst, R.drawable.default_user).id;
             }
 
             newBetId = DatabaseHelper.insertNewBet(
@@ -170,7 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                                     newOpponentsBet,
                                                     newYourBet,
                                                     newTermsAndConditions,
-                                                    newCompleted);
+                                                    newCompleted).id;
         }
         catch (SQLiteException e) {
             e.printStackTrace();
@@ -214,6 +203,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.close();
             }
         }
+    }
+
+    public static Contact findContact (Context context, long contactId) {
+        DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(context);
+        Contact contact = null;
+        SQLiteDatabase db = null;
+        try {
+            db = myDatabaseHelper.getWritableDatabase();
+            Cursor cursor = db.query(DatabaseHelper.CONTACTS_TABLE,
+                    new String [] {DatabaseHelper.CONTACT_NAME, DatabaseHelper.CONTACT_IMAGE},
+                    DatabaseHelper.CONTACT_ID + " = ?",
+                    new String [] {Long.toString(contactId)},
+                    null, null, null);
+            if (cursor.moveToFirst()) {
+                String name = cursor.getString(0);
+                int image = cursor.getInt(1);
+                contact = new Contact(contactId, name, image);
+            }
+            cursor.close();
+        }
+        catch (SQLiteException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        return contact;
     }
 
     public static void deleteContact (Context context, long contactId) {

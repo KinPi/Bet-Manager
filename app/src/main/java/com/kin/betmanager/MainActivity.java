@@ -1,6 +1,7 @@
 package com.kin.betmanager;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,8 @@ import android.view.View;
 
 import com.kin.betmanager.adapters.SectionPagerAdapter;
 import com.kin.betmanager.database.DatabaseHelper;
+
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SectionPagerAdapter pagerAdapter = new SectionPagerAdapter(this, getSupportFragmentManager());
+        SectionPagerAdapter pagerAdapter = new SectionPagerAdapter(this, getSupportFragmentManager(), 3);
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
 
@@ -103,8 +106,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         long betId = data.getLongExtra(NewBetActivity.NEW_BET_ID, -1);
                         DatabaseHelper.deleteBet(MainActivity.this, betId);
-                        ContactsFragment fragment = (ContactsFragment) ((SectionPagerAdapter)viewPager.getAdapter()).fragmentReferenceMap.get(2);
-                        fragment.updateData();
+
+                        Map<Integer, UpdatableFragment> fragmentReferenceMap = ((SectionPagerAdapter) viewPager.getAdapter()).fragmentReferenceMap;
+                        for (Map.Entry<Integer, UpdatableFragment> entry : fragmentReferenceMap.entrySet()) {
+                            if (entry.getValue() != null)
+                                entry.getValue().updateData();
+                        }
 
                     }
 

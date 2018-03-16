@@ -10,6 +10,7 @@ import android.view.View;
 import com.kin.betmanager.BetsListFragment;
 import com.kin.betmanager.ContactsFragment;
 import com.kin.betmanager.R;
+import com.kin.betmanager.UpdatableFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,17 +22,20 @@ import java.util.Map;
 public class SectionPagerAdapter extends FragmentPagerAdapter {
 
     private Context context = null;
-    public Map<Integer, Fragment> fragmentReferenceMap;
+    private int size = 0;
+    public Map<Integer, UpdatableFragment> fragmentReferenceMap;
 
-    public SectionPagerAdapter (Context context, FragmentManager fragmentManager) {
+
+    public SectionPagerAdapter (Context context, FragmentManager fragmentManager, int size) {
         super(fragmentManager);
         this.context = context;
-        fragmentReferenceMap = new HashMap<>(3);
+        fragmentReferenceMap = new HashMap<>(size);
+        this.size = size;
     }
 
     @Override
     public Fragment getItem (int position) {
-        Fragment fragment = null;
+        UpdatableFragment fragment = null;
         switch (position) {
             case 0:
             case 1:
@@ -64,7 +68,7 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount () {
-        return 3;
+        return size;
     }
 
     @Override

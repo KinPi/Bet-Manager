@@ -1,12 +1,17 @@
 package com.kin.betmanager.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kin.betmanager.ContactDetailActivity;
 import com.kin.betmanager.R;
+import com.kin.betmanager.objects.Contact;
 
 import java.util.List;
 
@@ -15,19 +20,23 @@ import java.util.List;
  */
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
-    private List<String> contactNames;
+    public static final String CONTACT = "contact";
 
-    public ContactsAdapter (List<String> contactNames) {
-        this.contactNames = contactNames;
+    private Context context;
+    private List<Contact> contacts;
+
+    public ContactsAdapter (Context context, List<Contact> contacts) {
+        this.context = context;
+        this.contacts = contacts;
     }
 
-    public void setContactNames (List<String> contactNames) {
-        this.contactNames = contactNames;
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
     }
 
     @Override
     public int getItemCount () {
-        return contactNames.size();
+        return contacts.size();
     }
 
     @Override
@@ -40,7 +49,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public void onBindViewHolder (ViewHolder holder, final int position) {
         CardView cardView = holder.cardView;
         TextView nameTextView = (TextView) cardView.findViewById (R.id.contact_name_textview);
-        nameTextView.setText(contactNames.get(position));
+        nameTextView.setText(contacts.get(position).name);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ContactsAdapter.this.context, ContactDetailActivity.class);
+                intent.putExtra(CONTACT, contacts.get(position));
+                ContactsAdapter.this.context.startActivity(intent);
+            }
+        });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
