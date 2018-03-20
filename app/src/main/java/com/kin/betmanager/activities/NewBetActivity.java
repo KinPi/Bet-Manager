@@ -1,4 +1,4 @@
-package com.kin.betmanager;
+package com.kin.betmanager.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kin.betmanager.R;
 import com.kin.betmanager.database.DatabaseHelper;
 
 public class NewBetActivity extends AppCompatActivity {

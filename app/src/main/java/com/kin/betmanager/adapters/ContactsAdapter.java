@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kin.betmanager.ContactDetailActivity;
+import com.kin.betmanager.activities.ContactDetailActivity;
 import com.kin.betmanager.R;
 import com.kin.betmanager.objects.Contact;
 

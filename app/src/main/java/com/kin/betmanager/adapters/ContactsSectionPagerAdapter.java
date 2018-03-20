@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.kin.betmanager.BetsListFragment;
-import com.kin.betmanager.ContactsFragment;
-import com.kin.betmanager.UpdatableFragment;
+import com.kin.betmanager.fragments.BetsListFragment;
+import com.kin.betmanager.fragments.UpdatableFragment;
 
 /**
  * Created by Kin on 3/16/18.

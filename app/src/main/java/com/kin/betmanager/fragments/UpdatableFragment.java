@@ -1,4 +1,4 @@
-package com.kin.betmanager;
+package com.kin.betmanager.fragments;
 
 
 import android.os.Bundle;

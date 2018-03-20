@@ -205,6 +205,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public static void deleteAllBetsMadeWithContact (Context context, long contactId) {
+        DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(context);
+        SQLiteDatabase db = null;
+        try {
+            db = myDatabaseHelper.getWritableDatabase();
+            db.delete(DatabaseHelper.BETS_TABLE,
+                    DatabaseHelper.BETTING_AGAINST + " = ?",
+                    new String [] {Long.toString(contactId)});
+        }
+        catch (SQLiteException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+    }
+
     public static Contact findContact (Context context, long contactId) {
         DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(context);
         Contact contact = null;

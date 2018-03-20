@@ -17,4 +17,9 @@
     <string name="profile_picture">Profile Picture</string>
     <string name="bet_created_message">Your bet has been created!</string>
     <string name="undo">Undo</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="contacts_delete_confirmation_text">Deleting this contact will remove all bets associated with the contact as well. Do you want to continue?</string>
+    <string name="alert_dialog_cancel">CANCEL</string>
+    <string name="alert_dialog_delete">DELETE</string>
 </resources>

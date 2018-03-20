@@ -1,4 +1,4 @@
-package com.kin.betmanager;
+package com.kin.betmanager.fragments;
 
 
 import android.content.res.Configuration;
@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kin.betmanager.R;
 import com.kin.betmanager.adapters.ContactsAdapter;
 import com.kin.betmanager.database.DatabaseHelper;
 import com.kin.betmanager.objects.Contact;

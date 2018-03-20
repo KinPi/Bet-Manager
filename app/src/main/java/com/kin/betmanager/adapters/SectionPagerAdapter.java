@@ -7,10 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 
-import com.kin.betmanager.BetsListFragment;
-import com.kin.betmanager.ContactsFragment;
+import com.kin.betmanager.fragments.BetsListFragment;
+import com.kin.betmanager.fragments.ContactsFragment;
 import com.kin.betmanager.R;
-import com.kin.betmanager.UpdatableFragment;
+import com.kin.betmanager.fragments.UpdatableFragment;
 
 import java.util.HashMap;
 import java.util.Map;
