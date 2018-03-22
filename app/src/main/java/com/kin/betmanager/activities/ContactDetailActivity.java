@@ -56,10 +56,15 @@ public class ContactDetailActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.edit:
+            case R.id.action_create_new_bet:
+                Intent intent = new Intent(this, NewBetActivity.class);
+                intent.putExtra(NewBetActivity.BETTING_AGAINST_NAME, contact.name);
+                startActivity(intent);
+                return true;
+            case R.id.action_edit:
                 createEditContactAlertDialog().show();
                 return true;
-            case R.id.delete:
+            case R.id.action_delete:
                 createDeleteAlertDialog().show();
                 return true;
         }

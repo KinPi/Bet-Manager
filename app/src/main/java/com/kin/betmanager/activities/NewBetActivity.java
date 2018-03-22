@@ -17,6 +17,7 @@ import com.kin.betmanager.database.DatabaseHelper;
 public class NewBetActivity extends AppCompatActivity {
 
     public static final String NEW_BET_ID = "new bet id";
+    public static final String BETTING_AGAINST_NAME = "betting against name";
 
     private static final String TITLE = "title";
     private static final String BETTING_AGAINST = "betting against";
@@ -51,6 +52,11 @@ public class NewBetActivity extends AppCompatActivity {
             opponentsBetEditText.setText(savedInstanceState.getString(OPPONENTS_BET));
             yourBetEditText.setText(savedInstanceState.getString(YOUR_BET));
             termsAndConditionsEditText.setText(savedInstanceState.getString(TERMS_AND_CONDITIONS));
+        }
+
+        String bettingAgainstName = getIntent().getStringExtra(BETTING_AGAINST_NAME);
+        if (bettingAgainstName != null) {
+            bettingAgainstEditText.setText(bettingAgainstName);
         }
     }
 
