@@ -22,4 +22,8 @@
     <string name="contacts_delete_confirmation_text">Deleting this contact will remove all bets associated with the contact as well. Do you want to continue?</string>
     <string name="alert_dialog_cancel">CANCEL</string>
     <string name="alert_dialog_delete">DELETE</string>
+    <string name="alert_dialog_edit">EDIT</string>
+    <string name="confirm_deletion">Confirm Deletion</string>
+    <string name="edit_contact">Edit Contact</string>
+    <string name="name">Name</string>
 </resources>

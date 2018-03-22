@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.kin.betmanager.R;
+import com.kin.betmanager.activities.ContactDetailActivity;
 import com.kin.betmanager.objects.Bet;
 import com.kin.betmanager.objects.Contact;
 
@@ -294,5 +295,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return opponentId;
+    }
+
+    public static void updateName(Context contactDetailActivity, long id, String newName) {
+        DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(contactDetailActivity);
+        SQLiteDatabase db = null;
+        try {
+            db = myDatabaseHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(CONTACT_NAME, newName);
+            db.update(CONTACTS_TABLE, values, DatabaseHelper.CONTACT_ID + " = ?", new String [] {Long.toString(id)});
+        }
+        catch (SQLiteException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (db != null) {
+                db.close();
+            }
+        }
     }
 }

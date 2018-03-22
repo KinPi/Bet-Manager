@@ -1,6 +1,7 @@
 package com.kin.betmanager.activities;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kin.betmanager.R;
@@ -54,6 +56,9 @@ public class ContactDetailActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.edit:
+                createEditContactAlertDialog().show();
+                return true;
             case R.id.delete:
                 createDeleteAlertDialog().show();
                 return true;
@@ -61,10 +66,46 @@ public class ContactDetailActivity extends AppCompatActivity {
         return false;
     }
 
+    private AlertDialog createEditContactAlertDialog() {
+        View alertLayout = getLayoutInflater().inflate(R.layout.alert_dialog_edit_contact, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.edit_contact));
+        builder.setView(alertLayout);
+
+        TextView editTextView = (TextView) alertLayout.findViewById(R.id.edit_textview);
+        TextView cancelTextView = (TextView) alertLayout.findViewById(R.id.cancel_textview);
+        final EditText nameEditText = (EditText) alertLayout.findViewById(R.id.edit_contact_name_edittext);
+        nameEditText.setText(contact.name);
+
+        final AlertDialog dialog = builder.create();
+
+        editTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                contact.name = nameEditText.getText().toString();
+                DatabaseHelper.updateName(ContactDetailActivity.this, contact.id, contact.name);
+                dialog.dismiss();
+                Intent intent = getIntent();
+                intent.putExtra(ContactsAdapter.CONTACT, contact);
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        cancelTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        return dialog;
+    }
+
     private AlertDialog createDeleteAlertDialog() {
         View alertLayout = getLayoutInflater().inflate(R.layout.alert_dialog_delete, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirm Deletion");
+        builder.setTitle(getResources().getString(R.string.confirm_deletion));
         builder.setView(alertLayout);
 
         TextView deleteTextView = (TextView) alertLayout.findViewById(R.id.delete_textview);
