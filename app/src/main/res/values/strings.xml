@@ -26,4 +26,5 @@
     <string name="confirm_deletion">Confirm Deletion</string>
     <string name="edit_contact">Edit Contact</string>
     <string name="name">Name</string>
+    <string name="bets_image_view">Bets image view</string>
 </resources>

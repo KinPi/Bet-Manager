@@ -20,8 +20,9 @@
             android:name=".activities.NewBetActivity"
             android:label="@string/create_new_bet"
             android:parentActivityName=".activities.MainActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".activities.ContactDetailActivity"></activity>
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".activities.ContactDetailActivity" />
+        <activity android:name=".activities.BetDetailActivity"></activity>
     </application>
 
 </manifest>

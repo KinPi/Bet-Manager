@@ -1,14 +1,17 @@
 package com.kin.betmanager.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kin.betmanager.R;
+import com.kin.betmanager.activities.BetDetailActivity;
 import com.kin.betmanager.database.DatabaseHelper;
 import com.kin.betmanager.objects.Bet;
 import com.kin.betmanager.objects.Contact;
@@ -42,12 +45,12 @@ public class BetsAdapter extends RecyclerView.Adapter<BetsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(BetsAdapter.ViewHolder holder, int position) {
         CardView cardView = holder.cardView;
-        Bet bet = betsList.get(position);
+        final Bet bet = betsList.get(position);
 
         TextView titleTextView = cardView.findViewById(R.id.bet_card_view_title);
         titleTextView.setText(bet.title);
 
-        Contact contact;
+        final Contact contact;
         TextView bettingAgainstTextView = cardView.findViewById(R.id.bet_card_view_betting_against);
         if (holder.contact == null) {
             contact = DatabaseHelper.findContact(context, betsList.get(position).bettingAgainst);
@@ -56,6 +59,16 @@ public class BetsAdapter extends RecyclerView.Adapter<BetsAdapter.ViewHolder> {
             contact = holder.contact;
         }
         bettingAgainstTextView.setText(contact.name);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, BetDetailActivity.class);
+                intent.putExtra(BetDetailActivity.BET, bet);
+                intent.putExtra(BetDetailActivity.CONTACT, contact);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
