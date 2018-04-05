@@ -22,7 +22,8 @@
             android:parentActivityName=".activities.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.ContactDetailActivity" />
-        <activity android:name=".activities.BetDetailActivity"></activity>
+        <activity android:name=".activities.BetDetailActivity" />
+        <activity android:name=".activities.EditBetActivity"></activity>
     </application>
 
 </manifest>

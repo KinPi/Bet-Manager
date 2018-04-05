@@ -16,6 +16,8 @@ public class Bet implements Parcelable{
     public String termsAndConditions;
     public boolean isCompleted;
 
+    public Bet () {}
+
     public Bet (long id, String title, long bettingAgainst, String opponentsBet, String yourBet, String termsAndConditions, boolean isCompleted) {
         this.id = id;
         this.title = title;

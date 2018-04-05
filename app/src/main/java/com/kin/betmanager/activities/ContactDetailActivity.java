@@ -46,7 +46,7 @@ public class ContactDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_item_details, menu);
+        getMenuInflater().inflate(R.menu.menu_contact_details, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -88,7 +88,7 @@ public class ContactDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 contact.name = nameEditText.getText().toString();
-                DatabaseHelper.updateName(ContactDetailActivity.this, contact.id, contact.name);
+                DatabaseHelper.updateContactName(ContactDetailActivity.this, contact.id, contact.name);
                 dialog.dismiss();
                 Intent intent = getIntent();
                 intent.putExtra(ContactsAdapter.CONTACT, contact);
@@ -115,6 +115,9 @@ public class ContactDetailActivity extends AppCompatActivity {
 
         TextView deleteTextView = (TextView) alertLayout.findViewById(R.id.delete_textview);
         TextView cancelTextView = (TextView) alertLayout.findViewById(R.id.cancel_textview);
+        TextView deleteConfirmationTextView = (TextView) alertLayout.findViewById(R.id.delete_confirmation_textview);
+
+        deleteConfirmationTextView.setText(getString(R.string.contacts_delete_confirmation_text));
 
         final AlertDialog dialog = builder.create();
 
@@ -136,6 +139,15 @@ public class ContactDetailActivity extends AppCompatActivity {
         });
 
         return dialog;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Contact contactCheck = DatabaseHelper.findContact(this, contact.id);
+        if (contactCheck == null) {
+            finish();
+        }
     }
 
 }

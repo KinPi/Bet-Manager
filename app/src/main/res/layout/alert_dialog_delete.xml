@@ -14,7 +14,6 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:gravity="center"
-        android:text="@string/contacts_delete_confirmation_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -3,6 +3,7 @@ package com.kin.betmanager.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -176,9 +177,93 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return newBetId;
     }
 
-    public static void deleteBet (Context context, long betId) {
+    public static Bet findBet (Context context, long betId) {
+        DatabaseHelper myDataBaseHelper = DatabaseHelper.getInstance(context);
+        SQLiteDatabase db = null;
+        Bet bet = null;
+        try {
+            db = myDataBaseHelper.getReadableDatabase();
+            Cursor cursor = db.query(BETS_TABLE,
+                    new String [] {TITLE, BETTING_AGAINST, OPPONENTS_BET, YOUR_BET, TERMS_AND_CONDITIONS, COMPLETED},
+                    BET_ID + " = ?",
+                    new String [] {Long.toString(betId)},
+                    null , null, null);
+            if (cursor.moveToFirst()) {
+                bet = new Bet();
+                bet.id = betId;
+                bet.title = cursor.getString(0);
+                bet.bettingAgainst = cursor.getLong(1);
+                bet.opponentsBet = cursor.getString(2);
+                bet.yourBet = cursor.getString(3);
+                bet.termsAndConditions = cursor.getString(4);
+                bet.isCompleted = cursor.getInt(5) == 1;
+            }
+            cursor.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        return bet;
+    }
+
+    public static void updateBet (Context context,
+                                  long betId,
+                                  String newTitle,
+                                  String newOpponentsBet,
+                                  String newYourBet,
+                                  String newTermsAndConditions) {
+        DatabaseHelper myDataBaseHelper = DatabaseHelper.getInstance(context);
+        SQLiteDatabase db = null;
+        try {
+            db = myDataBaseHelper.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(TITLE, newTitle);
+            contentValues.put(OPPONENTS_BET, newOpponentsBet);
+            contentValues.put(YOUR_BET, newYourBet);
+            contentValues.put(TERMS_AND_CONDITIONS, newTermsAndConditions);
+            db.update(BETS_TABLE, contentValues, BET_ID + " = ?", new String[] {Long.toString(betId)});
+        }
+        catch (SQLiteException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+    }
+
+    public static void updateBetCompletionStatus (Context context, long betId, boolean status) {
         DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(context);
         SQLiteDatabase db = null;
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COMPLETED, status);
+            db = myDatabaseHelper.getWritableDatabase();
+            db.update(BETS_TABLE,
+                    contentValues,
+                    BET_ID + " = ?",
+                    new String [] {Long.toString(betId)});
+        }
+        catch (SQLiteException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+    }
+
+    public static boolean deleteBet (Context context, long betId) {
+        DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(context);
+        SQLiteDatabase db = null;
+        boolean isContactDeleted = false;
         try {
             long opponentId = findOpponentIdGivenBetId(context, betId);
             db = myDatabaseHelper.getWritableDatabase();
@@ -193,6 +278,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     null, null, null, null);
             if (cursor.getCount() == 0) {
                 deleteContact(context, opponentId);
+                isContactDeleted = true;
             }
             cursor.close();
         }
@@ -204,6 +290,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.close();
             }
         }
+        return isContactDeleted;
     }
 
     public static void deleteAllBetsMadeWithContact (Context context, long contactId) {
@@ -297,7 +384,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return opponentId;
     }
 
-    public static void updateName(Context contactDetailActivity, long id, String newName) {
+    public static void updateContactName(Context contactDetailActivity, long id, String newName) {
         DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(contactDetailActivity);
         SQLiteDatabase db = null;
         try {

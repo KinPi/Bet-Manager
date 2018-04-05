@@ -1,18 +1,24 @@
 package com.kin.betmanager.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kin.betmanager.R;
+import com.kin.betmanager.database.DatabaseHelper;
 import com.kin.betmanager.objects.Bet;
 import com.kin.betmanager.objects.Contact;
 
@@ -27,6 +33,10 @@ public class BetDetailActivity extends AppCompatActivity implements AppBarLayout
     private EditText yourBetEditText;
     private EditText termsAndConditionsEditText;
     private FloatingActionButton completionFAB;
+    private Toolbar toolbar;
+
+    private Bet bet;
+    private Contact contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +44,14 @@ public class BetDetailActivity extends AppCompatActivity implements AppBarLayout
         setContentView(R.layout.activity_bet_detail);
 
         Intent intent = getIntent();
-        Bet bet = intent.getParcelableExtra(BET);
-        Contact contact = intent.getParcelableExtra(CONTACT);
+        bet = intent.getParcelableExtra(BET);
+        contact = intent.getParcelableExtra(CONTACT);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        actionBar.setTitle(bet.title);
 
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
         bettingAgainstEditText = (EditText) findViewById(R.id.betting_against_edittext);
@@ -53,24 +62,45 @@ public class BetDetailActivity extends AppCompatActivity implements AppBarLayout
 
         appBarLayout.addOnOffsetChangedListener(this);
 
+        toolbar.setTitle(bet.title);
+
         bettingAgainstEditText.setText(contact.name);
         opponentsBetEditText.setText(bet.opponentsBet);
         yourBetEditText.setText(bet.yourBet);
         termsAndConditionsEditText.setText(bet.termsAndConditions);
+
+        if (bet.isCompleted) {
+            completionFAB.setImageResource(R.drawable.ic_loop_white_24dp);
+        }
+        else {
+            completionFAB.setImageResource(R.drawable.ic_done_white_24dp);
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return false;
+    public void onRestart () {
+        super.onRestart();
+        bet = DatabaseHelper.findBet(this, bet.id);
+        Intent intent = new Intent(this, BetDetailActivity.class);
+        intent.putExtra(BET, bet);
+        intent.putExtra(CONTACT, contact);
+        startActivity(intent);
+        finish();
     }
 
     public void onClickFloatingActionButton(View view) {
-
+        if (bet.isCompleted) {
+            completionFAB.setImageResource(R.drawable.ic_done_white_24dp);
+            bet.isCompleted = false;
+            DatabaseHelper.updateBetCompletionStatus(this, bet.id, false);
+            Toast.makeText(this, getString(R.string.changeToOngoing), Toast.LENGTH_LONG).show();
+        }
+        else {
+            completionFAB.setImageResource(R.drawable.ic_loop_white_24dp);
+            bet.isCompleted = true;
+            DatabaseHelper.updateBetCompletionStatus(this, bet.id, true);
+            Toast.makeText(this, getString(R.string.changeToCompleted), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -81,5 +111,62 @@ public class BetDetailActivity extends AppCompatActivity implements AppBarLayout
         else {
             completionFAB.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_bet_details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_edit:
+                Intent intent = new Intent(this, EditBetActivity.class);
+                intent.putExtra(BET, bet);
+                startActivity(intent);
+                return true;
+            case R.id.action_delete:
+                createDeleteAlertDialog().show();
+                return true;
+        }
+        return false;
+    }
+
+    private AlertDialog createDeleteAlertDialog() {
+        View alertLayout = getLayoutInflater().inflate(R.layout.alert_dialog_delete, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.confirm_deletion));
+        builder.setView(alertLayout);
+
+        TextView deleteTextView = (TextView) alertLayout.findViewById(R.id.delete_textview);
+        TextView cancelTextView = (TextView) alertLayout.findViewById(R.id.cancel_textview);
+        TextView deleteConfirmationTextView = (TextView) alertLayout.findViewById(R.id.delete_confirmation_textview);
+
+        deleteConfirmationTextView.setText(getString(R.string.bet_delete_confirmation_text));
+
+        final AlertDialog dialog = builder.create();
+
+        deleteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper.deleteBet(BetDetailActivity.this, bet.id);
+                dialog.dismiss();
+                finish();
+            }
+        });
+
+        cancelTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        return dialog;
     }
 }

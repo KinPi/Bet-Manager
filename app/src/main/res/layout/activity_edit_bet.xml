@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.EditBetActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <include
+            layout="@layout/toolbar_main"
+            android:id="@+id/toolbar" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/title_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/title"
+            android:theme="@style/TextLabelInputLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/title_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/opponents_bet_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:hint="@string/opponents_bet"
+            android:theme="@style/TextLabelInputLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/opponents_bet_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/your_bet_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:hint="@string/your_bet"
+            android:theme="@style/TextLabelInputLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/your_bet_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/terms_and_conditions_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:hint="@string/terms_and_conditions"
+            android:theme="@style/TextLabelInputLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/terms_and_conditions_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:gravity="top|start" />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -14,5 +14,5 @@
         android:title="@string/settings"
         android:icon="@drawable/ic_settings_white_24dp"
         android:orderInCategory="2"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 </menu>
