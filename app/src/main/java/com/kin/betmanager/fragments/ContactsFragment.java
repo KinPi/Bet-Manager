@@ -93,7 +93,7 @@ public class ContactsFragment extends UpdatableFragment {
                 do {
                     int id = cursor.getInt(0);
                     String name = cursor.getString(1);
-                    int image = cursor.getInt(2);
+                    String image = cursor.getString(2);
                     contacts.add(new Contact(id, name, image));
                 } while (cursor.moveToNext());
             }

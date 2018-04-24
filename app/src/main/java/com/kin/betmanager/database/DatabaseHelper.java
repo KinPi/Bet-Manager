@@ -35,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String unformattedContactsTableSQLString = "CREATE TABLE %s (" +
                                                                         "%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                                                         "%s TEXT, " +
-                                                                        "%s INTEGER);";
+                                                                        "%s TEXT);";
 
     public static final String BETS_TABLE = "BETS";
     public static final String BET_ID = "_id";
@@ -81,7 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static Contact insertNewContact(SQLiteDatabase db,
                                             String newContactName,
-                                            int newContactImage) {
+                                            String newContactImage) {
         ContentValues values = new ContentValues();
         values.put(CONTACT_NAME, newContactName);
         values.put(CONTACT_IMAGE, newContactImage);
@@ -130,7 +130,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         String newOpponentsBet,
                                         String newYourBet,
                                         String newTermsAndConditions,
-                                        boolean newCompleted) {
+                                        boolean newCompleted,
+                                        String profilePicture) {
 
         DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(context);
         SQLiteDatabase db = null;
@@ -151,7 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
             else {
-                contactId = DatabaseHelper.insertNewContact(db, newBettingAgainst, R.drawable.default_user).id;
+                contactId = DatabaseHelper.insertNewContact(db, newBettingAgainst, profilePicture).id;
             }
 
             newBetId = DatabaseHelper.insertNewBet(
@@ -325,7 +326,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     null, null, null);
             if (cursor.moveToFirst()) {
                 String name = cursor.getString(0);
-                int image = cursor.getInt(1);
+                String image = cursor.getString(1);
                 contact = new Contact(contactId, name, image);
             }
             cursor.close();

@@ -2,22 +2,30 @@ package com.kin.betmanager.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.media.Image;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.kin.betmanager.R;
 import com.kin.betmanager.database.DatabaseHelper;
 
 public class NewBetActivity extends AppCompatActivity {
+    public static final int PICK_CONTACT = 2015;
 
     public static final String NEW_BET_ID = "new bet id";
     public static final String BETTING_AGAINST_NAME = "betting against name";
+    public static final String BETTING_AGAINST_IMAGE = "betting against image";
 
     private static final String TITLE = "title";
     private static final String BETTING_AGAINST = "betting against";
@@ -30,6 +38,9 @@ public class NewBetActivity extends AppCompatActivity {
     private EditText opponentsBetEditText;
     private EditText yourBetEditText;
     private EditText termsAndConditionsEditText;
+
+    private ImageView profilePicture;
+    private String profileImageUri = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +57,8 @@ public class NewBetActivity extends AppCompatActivity {
         yourBetEditText = (EditText) findViewById(R.id.your_bet_edittext);
         termsAndConditionsEditText = (EditText) findViewById(R.id.terms_and_conditions_edittext);
 
+        profilePicture = (ImageView) findViewById(R.id.profile_picture);
+
         if (savedInstanceState != null) {
             titleEditText.setText(savedInstanceState.getString(TITLE));
             bettingAgainstEditText.setText(savedInstanceState.getString(BETTING_AGAINST));
@@ -57,6 +70,11 @@ public class NewBetActivity extends AppCompatActivity {
         String bettingAgainstName = getIntent().getStringExtra(BETTING_AGAINST_NAME);
         if (bettingAgainstName != null) {
             bettingAgainstEditText.setText(bettingAgainstName);
+        }
+
+        String bettingAgainstImage = getIntent().getStringExtra(BETTING_AGAINST_IMAGE);
+        if (bettingAgainstImage != null && !bettingAgainstImage.isEmpty()) {
+            profilePicture.setImageURI(Uri.parse(bettingAgainstImage));
         }
     }
 
@@ -109,7 +127,8 @@ public class NewBetActivity extends AppCompatActivity {
                             inputOpponentsBet,
                             inputYourBet,
                             inputTermsAndConditions,
-                            false);
+                            false,
+                            profileImageUri);
                     if (newBetId != -1) {
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra(NEW_BET_ID, newBetId);
@@ -122,6 +141,35 @@ public class NewBetActivity extends AppCompatActivity {
                 }
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    public void searchContacts (View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+        startActivityForResult(intent, PICK_CONTACT);
+    }
+
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent intent) {
+        if (requestCode == PICK_CONTACT && resultCode == RESULT_OK) {
+            Uri contactUri = intent.getData();
+            Cursor cursor = getContentResolver().query(contactUri, null, null, null, null);
+            cursor.moveToFirst();
+
+            int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+            bettingAgainstEditText.setText(cursor.getString(column));
+
+            column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI);
+
+            try {
+                profileImageUri = cursor.getString(column);
+                profilePicture.setImageURI(Uri.parse(profileImageUri));
+            }
+            catch (Exception e) {
+                profileImageUri = "";
+                profilePicture.setImageDrawable(getResources().getDrawable(R.drawable.default_user));
+            }
+        }
     }
 
 }

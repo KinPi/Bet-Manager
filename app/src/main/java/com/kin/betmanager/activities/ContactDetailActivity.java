@@ -2,6 +2,7 @@ package com.kin.betmanager.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kin.betmanager.R;
@@ -31,9 +33,17 @@ public class ContactDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         contact = getIntent().getParcelableExtra(ContactsAdapter.CONTACT);
         getSupportActionBar().setTitle(contact.name);
+
+        ImageView profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        String imageUri = contact.image;
+        if (imageUri.isEmpty()) {
+            profilePicture.setImageDrawable(getResources().getDrawable(R.drawable.default_user));
+        }
+        else {
+            profilePicture.setImageURI(Uri.parse(imageUri));
+        }
 
         ContactsSectionPagerAdapter adapter = new ContactsSectionPagerAdapter(this, getSupportFragmentManager(), 2, contact.id);
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -59,6 +69,7 @@ public class ContactDetailActivity extends AppCompatActivity {
             case R.id.action_create_new_bet:
                 Intent intent = new Intent(this, NewBetActivity.class);
                 intent.putExtra(NewBetActivity.BETTING_AGAINST_NAME, contact.name);
+                intent.putExtra(NewBetActivity.BETTING_AGAINST_IMAGE, contact.image);
                 startActivity(intent);
                 return true;
             case R.id.action_edit:

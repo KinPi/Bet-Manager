@@ -2,11 +2,13 @@ package com.kin.betmanager.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kin.betmanager.activities.ContactDetailActivity;
@@ -50,6 +52,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         CardView cardView = holder.cardView;
         TextView nameTextView = (TextView) cardView.findViewById (R.id.contact_name_textview);
         nameTextView.setText(contacts.get(position).name);
+        ImageView profilePicture = (ImageView) cardView.findViewById(R.id.profile_picture);
+        String imageUri = contacts.get(position).image;
+        if (imageUri.isEmpty()) {
+            profilePicture.setImageDrawable(context.getResources().getDrawable(R.drawable.default_user));
+        }
+        else {
+            profilePicture.setImageURI(Uri.parse(imageUri));
+        }
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

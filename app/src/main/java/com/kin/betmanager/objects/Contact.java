@@ -10,9 +10,9 @@ import android.os.Parcelable;
 public class Contact implements Parcelable {
     public long id;
     public String name;
-    public int image;
+    public String image;
 
-    public Contact (long id, String name, int image) {
+    public Contact (long id, String name, String image) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -22,7 +22,7 @@ public class Contact implements Parcelable {
     protected Contact(Parcel in) {
         id = in.readLong();
         name = in.readString();
-        image = in.readInt();
+        image = in.readString();
     }
 
     public static final Creator<Contact> CREATOR = new Creator<Contact>() {
@@ -46,6 +46,6 @@ public class Contact implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeLong(id);
         parcel.writeString(name);
-        parcel.writeInt(image);
+        parcel.writeString(image);
     }
 }

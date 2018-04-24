@@ -63,22 +63,42 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/betting_against_input_layout"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:hint="@string/betting_against"
-                android:theme="@style/TextLabelInputLayout">
+                android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/betting_against_edittext"
-                    android:layout_width="match_parent"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/betting_against_input_layout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:singleLine="true" />
+                    android:layout_marginStart="20dp"
+                    android:hint="@string/betting_against"
+                    android:layout_weight="1"
+                    android:theme="@style/TextLabelInputLayout">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/betting_against_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/search_contacts_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/contacts"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_person_add_black_36dp"
+                    android:onClick="searchContacts"/>
+
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/opponents_bet_input_layout"
