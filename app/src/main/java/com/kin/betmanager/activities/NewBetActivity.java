@@ -65,6 +65,11 @@ public class NewBetActivity extends AppCompatActivity {
             opponentsBetEditText.setText(savedInstanceState.getString(OPPONENTS_BET));
             yourBetEditText.setText(savedInstanceState.getString(YOUR_BET));
             termsAndConditionsEditText.setText(savedInstanceState.getString(TERMS_AND_CONDITIONS));
+            profileImageUri = savedInstanceState.getString(BETTING_AGAINST_IMAGE);
+
+            if (!profileImageUri.isEmpty()) {
+                profilePicture.setImageURI(Uri.parse(profileImageUri));
+            }
         }
 
         String bettingAgainstName = getIntent().getStringExtra(BETTING_AGAINST_NAME);
@@ -75,6 +80,7 @@ public class NewBetActivity extends AppCompatActivity {
         String bettingAgainstImage = getIntent().getStringExtra(BETTING_AGAINST_IMAGE);
         if (bettingAgainstImage != null && !bettingAgainstImage.isEmpty()) {
             profilePicture.setImageURI(Uri.parse(bettingAgainstImage));
+            profileImageUri = bettingAgainstImage;
         }
     }
 
@@ -85,6 +91,7 @@ public class NewBetActivity extends AppCompatActivity {
         savedInstanceState.putString(OPPONENTS_BET, opponentsBetEditText.getText().toString());
         savedInstanceState.putString(YOUR_BET, yourBetEditText.getText().toString());
         savedInstanceState.putString(TERMS_AND_CONDITIONS, termsAndConditionsEditText.getText().toString());
+        savedInstanceState.putString(BETTING_AGAINST_IMAGE, profileImageUri);
         super.onSaveInstanceState(savedInstanceState);
     }
 
