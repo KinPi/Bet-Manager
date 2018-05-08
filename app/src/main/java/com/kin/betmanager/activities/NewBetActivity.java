@@ -20,6 +20,9 @@ import android.widget.Toast;
 import com.kin.betmanager.R;
 import com.kin.betmanager.database.DatabaseHelper;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class NewBetActivity extends AppCompatActivity {
     public static final int PICK_CONTACT = 2015;
 
@@ -33,31 +36,24 @@ public class NewBetActivity extends AppCompatActivity {
     private static final String YOUR_BET = "your bet";
     private static final String TERMS_AND_CONDITIONS = "terms and conditions";
 
-    private EditText titleEditText;
-    private EditText bettingAgainstEditText;
-    private EditText opponentsBetEditText;
-    private EditText yourBetEditText;
-    private EditText termsAndConditionsEditText;
+    @BindView(R.id.title_edittext) EditText titleEditText;
+    @BindView(R.id.betting_against_edittext) EditText bettingAgainstEditText;
+    @BindView(R.id.opponents_bet_edittext) EditText opponentsBetEditText;
+    @BindView(R.id.your_bet_edittext) EditText yourBetEditText;
+    @BindView(R.id.terms_and_conditions_edittext) EditText termsAndConditionsEditText;
 
-    private ImageView profilePicture;
+    @BindView(R.id.profile_picture) ImageView profilePicture;
     private String profileImageUri = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_bet);
+        ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        titleEditText = (EditText) findViewById(R.id.title_edittext);
-        bettingAgainstEditText = (EditText) findViewById(R.id.betting_against_edittext);
-        opponentsBetEditText = (EditText) findViewById(R.id.opponents_bet_edittext);
-        yourBetEditText = (EditText) findViewById(R.id.your_bet_edittext);
-        termsAndConditionsEditText = (EditText) findViewById(R.id.terms_and_conditions_edittext);
-
-        profilePicture = (ImageView) findViewById(R.id.profile_picture);
 
         if (savedInstanceState != null) {
             titleEditText.setText(savedInstanceState.getString(TITLE));

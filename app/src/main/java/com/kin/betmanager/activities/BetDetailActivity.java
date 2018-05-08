@@ -22,18 +22,19 @@ import com.kin.betmanager.database.DatabaseHelper;
 import com.kin.betmanager.objects.Bet;
 import com.kin.betmanager.objects.Contact;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class BetDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     public static final String BET = "bet";
     public static final String CONTACT = "contact";
 
-    private AppBarLayout appBarLayout;
-    private EditText bettingAgainstEditText;
-    private EditText opponentsBetEditText;
-    private EditText yourBetEditText;
-    private EditText termsAndConditionsEditText;
-    private FloatingActionButton completionFAB;
-    private Toolbar toolbar;
+    @BindView(R.id.betting_against_edittext) EditText bettingAgainstEditText;
+    @BindView(R.id.opponents_bet_edittext) EditText opponentsBetEditText;
+    @BindView(R.id.your_bet_edittext) EditText yourBetEditText;
+    @BindView(R.id.terms_and_conditions_edittext) EditText termsAndConditionsEditText;
+    @BindView(R.id.completion_floating_action_button) FloatingActionButton completionFAB;
 
     private Bet bet;
     private Contact contact;
@@ -42,24 +43,19 @@ public class BetDetailActivity extends AppCompatActivity implements AppBarLayout
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bet_detail);
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         bet = intent.getParcelableExtra(BET);
         contact = intent.getParcelableExtra(CONTACT);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
-        bettingAgainstEditText = (EditText) findViewById(R.id.betting_against_edittext);
-        opponentsBetEditText = (EditText) findViewById(R.id.opponents_bet_edittext);
-        yourBetEditText = (EditText) findViewById(R.id.your_bet_edittext);
-        termsAndConditionsEditText = (EditText) findViewById(R.id.terms_and_conditions_edittext);
-        completionFAB = (FloatingActionButton) findViewById(R.id.completion_floating_action_button);
-
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
         appBarLayout.addOnOffsetChangedListener(this);
 
         toolbar.setTitle(bet.title);

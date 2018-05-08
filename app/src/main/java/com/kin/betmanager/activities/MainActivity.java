@@ -20,31 +20,32 @@ import com.kin.betmanager.fragments.UpdatableFragment;
 
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int NEW_BET_REQUEST_CODE = 0;
     private static final String VIEW_PAGER_POSITION = "view pager position";
     private MenuItem createNewBetMenuItem;
-    private FloatingActionButton createNewBetFAB;
 
-    private ViewPager viewPager;
+    @BindView(R.id.fab_create_new_bet) FloatingActionButton createNewBetFAB;
+    @BindView(R.id.pager) ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         SectionPagerAdapter pagerAdapter = new SectionPagerAdapter(this, getSupportFragmentManager(), 3);
-        viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        createNewBetFAB = (FloatingActionButton) findViewById(R.id.fab_create_new_bet);
 
         if (savedInstanceState != null) {
             int viewPagerPosition = savedInstanceState.getInt(VIEW_PAGER_POSITION);

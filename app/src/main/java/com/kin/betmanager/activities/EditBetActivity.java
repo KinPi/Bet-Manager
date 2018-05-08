@@ -14,18 +14,22 @@ import com.kin.betmanager.R;
 import com.kin.betmanager.database.DatabaseHelper;
 import com.kin.betmanager.objects.Bet;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class EditBetActivity extends AppCompatActivity {
     Bet bet;
 
-    private EditText titleEditText;
-    private EditText opponentsBetEditText;
-    private EditText yourBetEditText;
-    private EditText termsAndConditionsEditText;
+    @BindView(R.id.title_edittext) EditText titleEditText;
+    @BindView(R.id.opponents_bet_edittext) EditText opponentsBetEditText;
+    @BindView(R.id.your_bet_edittext) EditText yourBetEditText;
+    @BindView(R.id.terms_and_conditions_edittext) EditText termsAndConditionsEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_bet);
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         bet = intent.getParcelableExtra(BetDetailActivity.BET);
@@ -35,11 +39,6 @@ public class EditBetActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.edit_bet);
-
-        titleEditText = (EditText) findViewById(R.id.title_edittext);
-        opponentsBetEditText = (EditText) findViewById(R.id.opponents_bet_edittext);
-        yourBetEditText = (EditText) findViewById(R.id.your_bet_edittext);
-        termsAndConditionsEditText = (EditText) findViewById(R.id.terms_and_conditions_edittext);
 
         titleEditText.setText(bet.title);
         opponentsBetEditText.setText(bet.opponentsBet);
