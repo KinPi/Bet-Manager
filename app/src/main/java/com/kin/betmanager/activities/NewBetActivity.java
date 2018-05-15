@@ -1,11 +1,15 @@
 package com.kin.betmanager.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +39,8 @@ public class NewBetActivity extends AppCompatActivity {
     private static final String OPPONENTS_BET = "opponenet's bet";
     private static final String YOUR_BET = "your bet";
     private static final String TERMS_AND_CONDITIONS = "terms and conditions";
+
+    private static final int PERMISSION_REQUEST_CODE = 519;
 
     @BindView(R.id.title_edittext) EditText titleEditText;
     @BindView(R.id.betting_against_edittext) EditText bettingAgainstEditText;
@@ -147,10 +153,29 @@ public class NewBetActivity extends AppCompatActivity {
     }
 
     public void searchContacts (View view) {
-        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-        startActivityForResult(intent, PICK_CONTACT);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String [] {Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CODE);
+        }
+        else {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+            startActivityForResult(intent, PICK_CONTACT);
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult (int requestCode, String permissions[], int[] grantResults) {
+        switch(requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                    startActivityForResult(intent, PICK_CONTACT);
+                }
+                else {
+                    Toast.makeText(this, getString(R.string.unable_to_get_permission), Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent intent) {
